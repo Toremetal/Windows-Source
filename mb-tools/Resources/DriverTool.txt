@@ -1,0 +1,48 @@
+@echo off
+REM Windows CMD for Dism to export or install drivers to mounted wim images.
+REM Or Export Drivers from the running image
+REM ARGS-LIST: "DRIVERFOLDER=%~1", "IMAGEFOLDER=%~2", if NOT [%3]==[] ("install") else ("Export")
+set "DRIVERFOLDER=%USERPROFILE%\desktop\OEM-Drivers"
+if NOT [%1]==[] (
+  set "DRIVERFOLDER=%~1"
+  if NOT [%2]==[] (
+    set "IMAGEFOLDER=%~2"
+    if [%3]==["install"] (
+        REM Install drivers to ImageFolder from Driver Folder 
+        echo Installing Drivers to Image...
+        Dism.exe /Image:"%IMAGEFOLDER%" /Add-Driver /Driver:"%DRIVERFOLDER%" /recurse
+        if %ERRORLEVEL% GTR 0 (
+          timeout /t 10
+        ) else (
+          echo Drivers installed to: "%IMAGEFOLDER%"
+          echo Operation Complete.
+          timeout /t 5
+        )
+        exit
+    ) else (
+        REM Export drivers from ImageFolder to Driver Folder
+        echo Exporting Drivers from Image...
+        Dism.exe /Image:"%IMAGEFOLDER%" /Export-Driver /Destination:"%DRIVERFOLDER%"
+        if %ERRORLEVEL% GTR 0 (
+          timeout /t 10
+        ) else (
+          echo Drivers exported to: "%DRIVERFOLDER%"
+          echo Operation Complete.
+          timeout /t 5
+        )
+        exit
+    )
+    
+  )
+)
+echo Exporting System Drivers...
+if NOT exist "%DRIVERFOLDER%" md "%DRIVERFOLDER%"
+Dism.exe /online /export-driver /destination:"%DRIVERFOLDER%"
+if %ERRORLEVEL% GTR 0 (
+  timeout /t 10
+) else (
+  echo Drivers exported to: "%DRIVERFOLDER%"
+  echo Operation Complete.
+  timeout /t 5
+)
+exit

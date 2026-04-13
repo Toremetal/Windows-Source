@@ -1,0 +1,10 @@
+@echo off
+bcdboot %1\Windows /d /addlast
+if %ERRORLEVEL% GTR 0 (
+  echo Create Boot Files ERROR.
+  goto end
+)
+echo Created Boot Files Successfully
+:end
+timeout /t 1
+exit

@@ -1,0 +1,61 @@
+@echo off
+Rem setlocal
+rem Setting the 'boot' keyword or a drive letter as arg2 sets both sdi and wim to use the device.
+rem Setting the 'boot' keyword as args3-5 overrides the .sdi device to use the boot device and default paths, the .wim device stays as arg2
+rem defaults              boot              \boot\boot.wim   \boot\boot.sdi
+rem args:       |ID*     |WimSdi-Partition  |WimPath         |SdiPath     |OverrideSdiPartitionToUSE_boot|Store path
+rem                                                                        Or StorePath D:\boot\bcd      |if boot override
+rem call CreateBootEntry.bat 11-22-33-44-55-66  D:     "\test\boot.wim" "\test\boot.sdi" boot                         "D:\boot\bcd"
+rem call CreateBootEntry.bat 11-22-33-44-55-66  boot   default          default          "D:\boot\bcd"
+rem call CreateBootEntry.bat 11-22-33-44-55-66 default default          default          "D:\boot\bcd"
+rem call CreateBootEntry.bat 11-22-33-44-55-66  D:     "\test\boot.wim" "\test\boot.sdi" "D:\boot\bcd"
+rem call CreateBootEntry.bat 11-22-33-44-55-66  boot   "\test\boot.wim" "\test\boot.sdi" "D:\boot\bcd"
+rem call CreateBootEntry.bat 11-22-33-44-55-66  D:     "\test\boot.wim" "\test\boot.sdi" boot "D:\boot\bcd"
+rem call CreateBootEntry.bat 11-22-33-44-55-66  D:     "\test\boot.wim"  boot
+rem call CreateBootEntry.bat 11-22-33-44-55-66  D:     "\test\boot.wim"
+rem call CreateBootEntry.bat 11-22-33-44-55-66  boot   "\test\boot.wim"
+rem call CreateBootEntry.bat 11-22-33-44-55-66  D:     boot
+rem call CreateBootEntry.bat 11-22-33-44-55-66  D:
+rem call CreateBootEntry.bat 11-22-33-44-55-66
+rem ======================================================================================================
+if [%1]==[] EXIT /b 1
+set "BootStore="
+set "Boot_Dev=boot"
+set "Ram_Boot_Dev=boot"
+set "WimPath=\boot\boot.wim"
+set "SdiPath=\boot\boot.sdi"
+if NOT [%2]==[] if NOT ["%~2"]==["default"] set "Boot_Dev=%~2"
+if NOT [%2]==[] if NOT ["%~2"]==["boot"] set "Ram_Boot_Dev=partition=%~2"
+if NOT [%2]==[] if ["%~2"]==["boot"] set "Ram_Boot_Dev=boot"
+if NOT [%3]==[] if ["%~3"]==["boot"] set "Ram_Boot_Dev=boot"
+if NOT [%4]==[] if ["%~4"]==["boot"] set "Ram_Boot_Dev=boot"
+if NOT [%5]==[] if ["%~5"]==["boot"] set "Ram_Boot_Dev=boot"
+if NOT [%3]==[] if NOT ["%~3"]==["boot"] if NOT ["%~3"]==["default"] set "WimPath=%~3"
+if NOT [%4]==[] if NOT ["%~4"]==["boot"] if NOT ["%~4"]==["default"] set "SdiPath=%~4"
+if NOT [%5]==[] if NOT ["%~5"]==["boot"] set "BootStore=/store %5 "
+if NOT [%6]==[] set "BootStore=/store %6 "
+bcdedit %BootStore%/create {ramdiskoptions}
+echo bcdedit %BootStore%/set {ramdiskoptions} ramdisksdidevice partition=%~2
+bcdedit %BootStore%/set {ramdiskoptions} ramdisksdidevice partition=%~2
+echo bcdedit %BootStore%/set {ramdiskoptions} ramdisksdipath %~4
+bcdedit %BootStore%/set {ramdiskoptions} ramdisksdipath %SdiPath%
+echo bcdedit %BootStore%/set {%~1} device ramdisk=[%Boot_Dev%]%WimPath%,{ramdiskoptions}
+bcdedit %BootStore%/set {%~1} device ramdisk=[%Boot_Dev%]%WimPath%,{ramdiskoptions}
+echo bcdedit %BootStore%/set {%~1} osdevice ramdisk=[%Boot_Dev%]%WimPath%,{ramdiskoptions}
+bcdedit %BootStore%/set {%~1} osdevice ramdisk=[%Boot_Dev%]%WimPath%,{ramdiskoptions}
+echo bcdedit %BootStore%/set {%~1} inherit {bootloadersettings}
+bcdedit %BootStore%/set {%~1} inherit {bootloadersettings}
+echo bcdedit %BootStore%/set {%~1} path \windows\system32\boot\winload.exe
+bcdedit %BootStore%/set {%~1} path \windows\system32\boot\winload.exe
+echo bcdedit %BootStore%/set {%~1} systemroot \windows
+bcdedit %BootStore%/set {%~1} systemroot \windows
+echo bcdedit %BootStore%/set {%~1} detecthal Yes
+bcdedit %BootStore%/set {%~1} detecthal Yes
+echo bcdedit %BootStore%/set {%~1} winpe Yes
+bcdedit %BootStore%/set {%~1} winpe Yes
+echo bcdedit %BootStore%/displayorder {%~1} /addlast
+bcdedit %BootStore%/displayorder {%~1} /addlast
+echo Create WinPE Boot Option Complete.
+Rem endlocal
+timeout /t 1
+exit

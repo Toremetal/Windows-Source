@@ -1,0 +1,33 @@
+@echo off
+Rem setlocal
+REM if only drive letter provided creates boot sector and marks active
+REM usage:call CreateNewSystemBootDevice.bat DRIVE_LETTER
+if [%1]==[] EXIT /b 1
+echo Setting Up
+set "USB_DriveLetter=%~1"
+echo SELECT VOLUME=%USB_DriveLetter%>"%TEMP%\vm.s"
+echo ACTIVE>>"%TEMP%\vm.s"
+echo exit>>"%TEMP%\vm.s"
+timeout /t 1
+diskpart /s "%TEMP%\vm.s"
+if %ERRORLEVEL% GTR 0 (
+  echo SET ACTIVE ERROR.
+  del /q "%TEMP%\vm.s"
+  goto end
+)
+del /q "%TEMP%\vm.s"
+bootsect /nt60 %USB_DriveLetter%
+if %ERRORLEVEL% GTR 0 (
+  echo create bootsector ERROR.
+  goto end
+)
+bcdboot C:\Windows /s %USB_DriveLetter% /f all
+if %ERRORLEVEL% GTR 0 (
+  echo create boot files ERROR.
+  goto end
+)
+echo Created Boot Files Successfully
+:end
+Rem endlocal
+timeout /t 1
+exit

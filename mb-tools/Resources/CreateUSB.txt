@@ -1,0 +1,56 @@
+@echo off
+Rem setlocal
+REM if only drive letter provided creates boot sector and marks active
+REM usage:call CreateUSB.bat DRIVE: install.wim-file(optional) install-image-index(optional-default 1)
+if [%1]==[] EXIT /b 1
+set RESULT=0
+set "USB_DriveLetter=%~1"
+if [%~2]==[justboot] goto CREATEBOOT
+set INDEX=1
+if NOT [%2]==[] if NOT [%2]==[True] if NOT [%2]==[False] SET "IMAGEFILE=%~2"
+if NOT [%3]==[] if NOT [%3]==[True] if NOT [%3]==[False] SET INDEX=%~3
+if NOT [%5]==[] if [%5]==[true] goto INSTALL
+echo SELECT VOLUME=%USB_DriveLetter%:>"%TEMP%\vm.s"
+echo ACTIVE>>"%TEMP%\vm.s"
+echo exit>>"%TEMP%\vm.s"
+timeout /t 1
+if Not [%~2]==[justboot] diskpart /s "%TEMP%\vm.s"
+if %ERRORLEVEL% GTR 0 (
+  echo SET ACTIVE ERROR.
+  del /q "%TEMP%\vm.s"
+  set RESULT=2
+  goto THEEND
+)
+del /q "%TEMP%\vm.s"
+if [%2]==[False] bootsect /nt60 %USB_DriveLetter%:
+if [%3]==[False] bootsect /nt60 %USB_DriveLetter%:
+if [%4]==[False] bootsect /nt60 %USB_DriveLetter%:
+if %ERRORLEVEL% GTR 0 (
+  echo create bootsector ERROR.
+  set RESULT=3
+  goto THEEND
+)
+if [%2]==[True] goto CREATEBOOT
+if [%2]==[False] goto CREATEBOOT
+if [%2]==[] goto THEEND
+:INSTALL
+echo Installing Operating System from %IMAGEFILE%
+
+DISM.exe /Apply-Image /ImageFile:"%IMAGEFILE%" /Index:%INDEX% /ApplyDir:%USB_DriveLetter%:\
+if %ERRORLEVEL% GTR 0 (
+  echo Install Image ERROR.
+  set RESULT=13
+  goto THEEND
+)
+:CREATEBOOT
+bcdboot %USB_DriveLetter%:\Windows /s %USB_DriveLetter%:
+if %ERRORLEVEL% GTR 0 (
+  echo create boot files ERROR.
+  set RESULT=13
+  goto THEEND
+)
+:THEEND
+echo Create Bootable Device Operation Complete
+Rem endlocal
+timeout /t 1
+exit /b %RESULT%

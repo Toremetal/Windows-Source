@@ -1,0 +1,9 @@
+@echo off
+echo Repairing System Files...
+C:\windows\system32\dism.exe /online /cleanup-image /restorehealth
+if %ERRORLEVEL% GTR 0 (
+  echo ERROR OCCURED!
+) else (
+  echo System File Repair Operation Complete.
+)
+exit

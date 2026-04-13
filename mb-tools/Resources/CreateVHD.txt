@@ -1,0 +1,102 @@
+@echo off
+setlocal
+REM Pass-in Variables(required*); Arg1*: VHD FileName-(drive):\path\file, Arg2*: Size(MB), Arg3: Windows Install Media file-(drive):\path\file, Arg4: Image #(1-100+)(defaults to 1 if not provided)
+REM usage:call CreateVHD.bat *vhd-file *Size(MB) install.wim-file(optional) install-image-index(optional-default 1)
+if [%1]==[] EXIT /b 1
+if [%2]==[] EXIT /b 2
+echo Setting Up
+set "C_VHD=%~1"
+set "C_SIZE=%2"
+if NOT [%3]==[] SET "IMAGEFILE=%~3"
+SET INDEX=1
+if NOT [%4]==[] SET INDEX=%~4
+echo getting available Drive letter
+if Not exist Z:\ (
+set VM_DriveLetter=Z:
+) else if Not exist Y:\ (
+set VM_DriveLetter=Y:
+) else if Not exist X:\ (
+set VM_DriveLetter=X:
+) else if Not exist W:\ (
+set VM_DriveLetter=W:
+) else if Not exist V:\ (
+set VM_DriveLetter=V:
+) else if Not exist U:\ (
+set VM_DriveLetter=U:
+) else if Not exist T:\ (
+set VM_DriveLetter=T:
+) else if Not exist S:\ (
+set VM_DriveLetter=S:
+) else if Not exist R:\ (
+set VM_DriveLetter=R:
+) else if Not exist Q:\ (
+set VM_DriveLetter=Q:
+) else if Not exist P:\ (
+set VM_DriveLetter=P:
+) else if Not exist O:\ (
+set VM_DriveLetter=O:
+) else if Not exist N:\ (
+set VM_DriveLetter=N:
+) else if Not exist M:\ (
+set VM_DriveLetter=M:
+) else if Not exist L:\ (
+set VM_DriveLetter=L:
+) else if Not exist K:\ (
+set VM_DriveLetter=K:
+) else if Not exist J:\ (
+set VM_DriveLetter=J:
+) else if Not exist I:\ (
+set VM_DriveLetter=I:
+) else if Not exist H:\ (
+set VM_DriveLetter=H:
+) else if Not exist G:\ (
+set VM_DriveLetter=G:
+) else if Not exist F:\ (
+set VM_DriveLetter=F:
+) else if Not exist E:\ (
+set VM_DriveLetter=E:
+) else if Not exist B:\ (
+set VM_DriveLetter=B:
+) else if Not exist A:\ (
+set VM_DriveLetter=A:
+)
+echo CREATE VDISK FILE="%C_VHD%" MAXIMUM=%C_SIZE% TYPE=EXPANDABLE>"%TEMP%\vm.s"
+echo ATTACH VDISK>>"%TEMP%\vm.s"
+echo CREATE PARTITION PRIMARY>>"%TEMP%\vm.s"
+echo FORMAT FS=NTFS LABEL="V-Machine" QUICK>>"%TEMP%\vm.s"
+echo ASSIGN LETTER %VM_DriveLetter%>>"%TEMP%\vm.s"
+echo exit>>"%TEMP%\vm.s"
+echo creating VHD:%C_VHD%
+timeout /t 1
+diskpart /s "%TEMP%\vm.s"
+if %ERRORLEVEL% GTR 0 (
+  echo create VHD:%C_VHD% ERROR.
+  del /q "%TEMP%\vm.s"
+  EXIT /b 11
+) else (
+  echo Waiting for Create VHD:%C_VHD% to Complete.
+)
+del /q "%TEMP%\vm.s"
+if [%3]==[] exit /b 0
+if NOT [%3]==[] echo Installing Operating System from %IMAGEFILE%
+if NOT [%3]==[] bootsect /nt60 %VM_DriveLetter%
+if %ERRORLEVEL% GTR 0 (
+  echo create bootsector ERROR.
+  endlocal
+  EXIT /b 12
+)
+if NOT [%3]==[] DISM.exe /Apply-Image /ImageFile:"%IMAGEFILE%" /Index:%INDEX% /ApplyDir:%VM_DriveLetter%\
+if %ERRORLEVEL% GTR 0 (
+  echo Install Image ERROR.
+  endlocal
+  EXIT /b 13
+)
+if NOT [%3]==[] bcdboot %VM_DriveLetter%\Windows /s %VM_DriveLetter% /f all
+if %ERRORLEVEL% GTR 0 (
+  echo create boot files ERROR.
+  endlocal
+  EXIT /b 14
+)
+echo Operation Complete
+endlocal
+exit /b 0
