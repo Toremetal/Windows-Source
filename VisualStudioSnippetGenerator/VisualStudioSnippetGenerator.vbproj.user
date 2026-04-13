@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PublishUrlHistory>windows\vssnippet\|ftp://toremetal.github.io/windows/vssnippet/|B:\Repos\website\toremetal.github.io\windows\vssnippet\|publish\</PublishUrlHistory>
+    <InstallUrlHistory>https://toremetal.com/windows/vssnippet/|https://toremetal.github.io/windows/vssnippet/</InstallUrlHistory>
+    <SupportUrlHistory>https://toremetal.com/windows</SupportUrlHistory>
+    <UpdateUrlHistory />
+    <BootstrapperUrlHistory />
+    <ErrorReportUrlHistory />
+    <FallbackCulture>en-US</FallbackCulture>
+    <VerifyUploadedFiles>false</VerifyUploadedFiles>
+  </PropertyGroup>
+  <PropertyGroup>
+    <EnableSecurityDebugging>false</EnableSecurityDebugging>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DebugSecurityZoneURL>https://toremetal.com/windows/vssnippet</DebugSecurityZoneURL>
+  </PropertyGroup>
+</Project>
