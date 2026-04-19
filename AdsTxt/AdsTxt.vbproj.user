@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <EnableSecurityDebugging>false</EnableSecurityDebugging>
+    <PublishUrlHistory>ftp://toremetal.com/windows/adstxt/|ftp://toremetal.com/windows/AdsTxt/</PublishUrlHistory>
+    <InstallUrlHistory>https://toremetal.com/windows/adstxt/|https://toremetal.com/windows/AdsTxt/</InstallUrlHistory>
+    <SupportUrlHistory>https://www.toremetal.com</SupportUrlHistory>
+    <UpdateUrlHistory />
+    <BootstrapperUrlHistory />
+    <ErrorReportUrlHistory>https://www.toremetal.com/contactus</ErrorReportUrlHistory>
+    <FallbackCulture>en-US</FallbackCulture>
+    <VerifyUploadedFiles>false</VerifyUploadedFiles>
+  </PropertyGroup>
+</Project>

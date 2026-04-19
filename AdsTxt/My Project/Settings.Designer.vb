@@ -100,9 +100,9 @@ Namespace My
     Friend Module MySettingsProperty
         
         <Global.System.ComponentModel.Design.HelpKeywordAttribute("My.Settings")>  _
-        Friend ReadOnly Property Settings() As Global.FileSorter.My.MySettings
+        Friend ReadOnly Property Settings() As Global.AdsTxt.My.MySettings
             Get
-                Return Global.FileSorter.My.MySettings.Default
+                Return Global.AdsTxt.My.MySettings.Default
             End Get
         End Property
     End Module

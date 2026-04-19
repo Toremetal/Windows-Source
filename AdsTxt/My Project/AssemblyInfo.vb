@@ -8,11 +8,11 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("FileSorter")>
+<Assembly: AssemblyTitle("AdsTxt Optimizer")>
 <Assembly: AssemblyDescription("Removes Duplicate Lines from a text file")>
 <Assembly: AssemblyCompany("™T©ReMeTaL")>
-<Assembly: AssemblyProduct("FileSorter")>
-<Assembly: AssemblyCopyright("©2022™T©ReMeTaL")>
+<Assembly: AssemblyProduct("AdsTxt")>
+<Assembly: AssemblyCopyright("©2026™T©ReMeTaL")>
 <Assembly: AssemblyTrademark("™T©ReMeTaL")>
 
 <Assembly: ComVisible(False)>
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")>
 
-<Assembly: AssemblyVersion("2022.2.0.3")>
-<Assembly: AssemblyFileVersion("2022.2.0.3")>
+<Assembly: AssemblyVersion("2026.4.1.7")>
+<Assembly: AssemblyFileVersion("2026.4.1.7")>

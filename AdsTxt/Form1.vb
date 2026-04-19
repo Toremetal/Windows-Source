@@ -1,5 +1,5 @@
 ﻿'/*
-' *    ™T©ReMeTaL FileSorter.
+' *    ™T©ReMeTaL AdsTxt.
 ' *    Copyright (C) 2022 ™T©ReMeTaL.
 ' *    Licensed under the Apache License, Version 2.0 (the "License");
 ' *    you may Not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 ' *   ************************************************************************
 ' *      Computer Scientist: David W. Rick
 ' *      Date: 2/5/22, 3:58 PM
-' *      Program Name: FileSorter
+' *      Program Name: AdsTxt
 ' *      File: Form1.vb
 ' *      Last Modified: 2/24/22, 11:53 AM
 ' *   *************************************************************************/
@@ -55,17 +55,26 @@ Public Class Form1
    ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles BackgroundWorker1.RunWorkerCompleted
         TextBox4.Text = "Done"
         Timer1.Stop()
+        ProgressBar1.Value = 100
         Button1.Enabled = True
     End Sub
 
     Private Sub BackgroundWorker1_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles BackgroundWorker1.DoWork
         If FileIO.FileSystem.FileExists(TextBox1.Text) Then
             Try
+                Dim tmpFile1 As String = FileIO.SpecialDirectories.Temp + "\tmp.tmp"
+                Dim tmpFile2 As String = FileIO.SpecialDirectories.Temp + "\tmp1.tmp"
+                If FileIO.FileSystem.FileExists(tmpFile1) Then
+                    FileIO.FileSystem.DeleteFile(tmpFile1)
+                End If
+                If FileIO.FileSystem.FileExists(tmpFile2) Then
+                    FileIO.FileSystem.DeleteFile(tmpFile2)
+                End If
                 Dim filReader As IO.StreamReader
                 Dim filReader3 As IO.StreamReader
                 Dim Text1 As IO.StreamReader
                 Dim filWriter As IO.StreamWriter
-                FileIO.FileSystem.CopyFile(TextBox1.Text, "tmp.tmp", True)
+                FileIO.FileSystem.CopyFile(TextBox1.Text, tmpFile1, True)
                 Text1 = FileIO.FileSystem.OpenTextFileReader(TextBox1.Text)
                 Dim tmpLine As String
                 Dim Text1Line As String
@@ -86,7 +95,7 @@ Public Class Form1
                         Text1Line = Text1Line.Replace("reseller", "RESELLER").Replace("Reseller", "RESELLER").Replace("direct", "DIRECT").Replace("Direct", "DIRECT")
                     End If
                     'Text1Line = Text1.ReadLine.Replace(", ", ",").ToLower().Replace("reseller", "RESELLER").Replace("direct", "DIRECT")
-                    filReader = FileIO.FileSystem.OpenTextFileReader("tmp.tmp")
+                    filReader = FileIO.FileSystem.OpenTextFileReader(tmpFile1)
                     Do Until filReader.EndOfStream
                         'tmpLine = filReader.ReadLine.Replace(", ", ",").ToLower().Replace("reseller", "RESELLER").Replace("direct", "DIRECT")
                         If CheckBox1.Checked Then
@@ -104,8 +113,8 @@ Public Class Form1
                         If tmpLine = Text1Line Then
                             count += 1
                             If count = 1 Then
-                                If FileIO.FileSystem.FileExists("tmp1.tmp") Then
-                                    filReader3 = FileIO.FileSystem.OpenTextFileReader("tmp1.tmp")
+                                If FileIO.FileSystem.FileExists(tmpFile2) Then
+                                    filReader3 = FileIO.FileSystem.OpenTextFileReader(tmpFile2)
                                     Do Until filReader3.EndOfStream
                                         If filReader3.ReadLine = Text1Line Then
                                             tr = True
@@ -115,12 +124,12 @@ Public Class Form1
                                     If tr = True Then
                                         tr = False
                                     Else
-                                        filWriter = FileIO.FileSystem.OpenTextFileWriter("tmp1.tmp", True)
+                                        filWriter = FileIO.FileSystem.OpenTextFileWriter(tmpFile2, True)
                                         filWriter.WriteLine(tmpLine)
                                         filWriter.Close()
                                     End If
                                 Else
-                                    filWriter = FileIO.FileSystem.OpenTextFileWriter("tmp1.tmp", False)
+                                    filWriter = FileIO.FileSystem.OpenTextFileWriter(tmpFile2, False)
                                     filWriter.WriteLine(tmpLine)
                                     filWriter.Close()
                                 End If
@@ -130,10 +139,20 @@ Public Class Form1
                     filReader.Close()
                 Loop
                 Text1.Close()
+                Dim resultStr As String = "Original Line Count: " & IO.File.ReadLines(tmpFile1).LongCount() & ", Optimized Line Count: " & IO.File.ReadLines(tmpFile2).LongCount()
+                If FileIO.FileSystem.FileExists(tmpFile1) Then
+                    FileIO.FileSystem.DeleteFile(tmpFile1)
+                End If
+                If FileIO.FileSystem.FileExists(tmpFile2) Then
+                    Dim ct As String = DateTime.Now.ToString("MM-dd-yyyy_HH-mm-ss")
+                    FileIO.FileSystem.MoveFile(tmpFile2, TextBox1.Text & "(" & ct & ").txt", True)
+                    MsgBox(resultStr)
+                Else
+                    MsgBox("No Corrections Performed!")
+                End If
             Catch ex As Exception
+                MsgBox(ex.Message)
             End Try
-            FileIO.FileSystem.DeleteFile("tmp.tmp")
-            FileIO.FileSystem.MoveFile("tmp1.tmp", TextBox1.Text & "(New).txt", True)
         End If
 
     End Sub
@@ -142,7 +161,7 @@ Public Class Form1
         If ProgressBar1.Value = 100 Then
             ProgressBar1.Value = 0
         Else
-            ProgressBar1.Value += 5
+            ProgressBar1.Value += 1
         End If
     End Sub
 
