@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <PublishUrlHistory>B:\Repos\website\toremetal.github.io\windows\filemod\|C:\Users\ToReMeTaL\source\repos\toremetal.github.io\windows\filemod\|C:\Users\ToReMeTaL\source\repos\toremetal.github.io\windows\filemods\|publish\</PublishUrlHistory>
-    <InstallUrlHistory>https://toremetal.github.io/windows/filemod/|https://github.toremetal.com/windows/filemod/|https://github.toremetal.com/windows/filemods/</InstallUrlHistory>
-    <SupportUrlHistory>https://toremetal.github.io|https://toremetal.com</SupportUrlHistory>
+    <PublishUrlHistory>ftp://toremetal.com/windows/filemod/|B:\Repos\website\toremetal.github.io\windows\filemod\|C:\Users\ToReMeTaL\source\repos\toremetal.github.io\windows\filemod\|C:\Users\ToReMeTaL\source\repos\toremetal.github.io\windows\filemods\|publish\</PublishUrlHistory>
+    <InstallUrlHistory>https://toremetal.com/windows/filemod/|https://toremetal.github.io/windows/filemod/|https://github.toremetal.com/windows/filemod/|https://github.toremetal.com/windows/filemods/</InstallUrlHistory>
+    <SupportUrlHistory>https://toremetal.com/windows/filemod|https://toremetal.github.io|https://toremetal.com</SupportUrlHistory>
     <UpdateUrlHistory />
     <BootstrapperUrlHistory />
     <ErrorReportUrlHistory />

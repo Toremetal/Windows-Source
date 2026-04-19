@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("Add text to every line of a file")>
 <Assembly: AssemblyCompany("™T©ReMeTaL")>
 <Assembly: AssemblyProduct("FileMod")>
-<Assembly: AssemblyCopyright("©2023™T©ReMeTaL")>
+<Assembly: AssemblyCopyright("©2026™T©ReMeTaL")>
 <Assembly: AssemblyTrademark("™T©ReMeTaL")>
 
 <Assembly: ComVisible(True)>
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")>
 
-<Assembly: AssemblyVersion("2023.11.1.3")>
-<Assembly: AssemblyFileVersion("2023.11.1.3")>
+<Assembly: AssemblyVersion("2026.4.1.3")>
+<Assembly: AssemblyFileVersion("2026.4.1.3")>
